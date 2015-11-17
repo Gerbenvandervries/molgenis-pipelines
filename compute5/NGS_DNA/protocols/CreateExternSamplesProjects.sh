@@ -11,6 +11,7 @@
 #string projectQcDir
 #string capturedBed
 #string environment_parameters
+#string computeVersion
 
 #list sequencingStartDate
 #list sequencer
@@ -24,14 +25,19 @@
 #string workflowpath
 
 #list internalSampleID
+#string ngsversion
 #string project
+#string NGS_DNAVersionFile
+
 
 #list barcode
 #list lane
 
 umask 0007
 
+module load Molgenis-Compute/${computeVersion}
 module list
+
 
 #
 # Create project dirs.
@@ -43,6 +49,9 @@ mkdir -p ${projectLogsDir}
 mkdir -p ${intermediateDir}
 mkdir -p ${projectResultsDir}
 mkdir -p ${projectQcDir}
+
+
+echo ${ngsversion} > ${NGS_DNAVersionFile}
 
 ROCKETPOINT=`pwd`
 
@@ -116,10 +125,8 @@ fi
 echo "before run second rocket"
 echo pwd
 
-module load NGS_DNA
-module list
 
 sh ${EBROOTMOLGENISMINCOMPUTE}/molgenis_compute.sh -p ${mainParameters} \
--p environment_parameters -p ${batchIDList} -p ${projectJobsDir}/${project}.csv -rundir ${projectJobsDir} \
+-p ${environment_parameters} -p ${batchIDList} -p ${projectJobsDir}/${project}.csv -rundir ${projectJobsDir} \
 -w ${workflowpath} -b slurm -g -weave -runid ${runid}
 
